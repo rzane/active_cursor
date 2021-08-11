@@ -5,21 +5,34 @@ RSpec.describe DatabaseCursor do
     expect(DatabaseCursor::VERSION).not_to be nil
   end
 
-  describe "postgresql" do
+  context "postgresql" do
+    let(:count) { rand(10..25) }
+    let(:batch_size) { rand(1..25) }
+
     before do
       Connection.use(:postgresql)
+
+      count.times do |value|
+        Foo.create!(value: value)
+      end
     end
 
-    it "counts" do
-      expect(Foo.count).to eq(0)
-      Foo.create!
-      expect(Foo.count).to eq(1)
+    it "yields each record" do
+      cursor = Foo.cursor(batch_size: batch_size)
+      expected = Array.new(count) { be_a(Foo).and(having_attributes(value: _1)) }
+      expect { |y| cursor.each(&y) }.to yield_successive_args(*expected)
     end
 
-    it "counts again" do
-      expect(Foo.count).to eq(0)
-      Foo.create!
-      expect(Foo.count).to eq(1)
+    it "yields each row" do
+      cursor = Foo.cursor(batch_size: batch_size)
+      expected = Array.new(count) { hash_including("value" => _1) }
+      expect { |y| cursor.each_row(&y) }.to yield_successive_args(*expected)
+    end
+
+    it "yields each tuple" do
+      cursor = Foo.select(:value).cursor(batch_size: batch_size)
+      expected = Array.new(count) { [_1] }
+      expect { |y| cursor.each_tuple(&y) }.to yield_successive_args(*expected)
     end
   end
 end

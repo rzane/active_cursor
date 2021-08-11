@@ -12,7 +12,7 @@ module DatabaseCursor
 
   module QueryMethods
     def cursor(...)
-      adapter = ADAPTERS.fetch(connection_config[:adapter])
+      adapter = ADAPTERS.fetch(connection_db_config.adapter)
       adapter.new(all, ...)
     rescue KeyError => error
       raise "Unknown adapter: #{error.key}"

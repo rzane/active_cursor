@@ -1,6 +1,6 @@
 require_relative "abstract_adapter"
 
 module DatabaseCursor
-  class PostgreSQLAdapter < Adapter
+  class PostgreSQLAdapter < AbstractAdapter
   end
 end
