@@ -8,8 +8,8 @@ module DatabaseCursor
   class Error < StandardError; end
 
   ADAPTERS = {
-    "postgresql" => PostgreSQLAdapter,
     "sqlite3" => Sqlite3Adapter,
+    "postgresql" => PostgreSQLAdapter
   }
 
   module QueryMethods
