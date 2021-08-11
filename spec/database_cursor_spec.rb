@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-class Foo < ActiveRecord::Base
-  extend DatabaseCursor::QueryMethods
-end
-
 RSpec.describe DatabaseCursor do
   let(:count) { 14 }
   let(:batch_size) { 5 }
@@ -11,11 +7,7 @@ RSpec.describe DatabaseCursor do
   let(:cursor) { relation.cursor(batch_size: batch_size) }
 
   before do
-    ActiveRecord::Schema.define do
-      create_table :foos, force: true do |t|
-        t.integer :value, null: false
-      end
-    end
+    Database.migrate
 
     count.times do |value|
       Foo.create!(value: value)

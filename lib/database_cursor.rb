@@ -4,8 +4,6 @@ require_relative "database_cursor/version"
 require "active_support/core_ext/module/delegation"
 
 class DatabaseCursor
-  extend Forwardable
-
   module QueryMethods
     def cursor(...)
       DatabaseCursor.new(all, ...)
@@ -51,7 +49,7 @@ class DatabaseCursor
 
   attr_reader :relation, :batch_size
 
-  def_delegators :relation, :model, :connection
+  delegate :model, :connection, to: :relation
 
   def sql
     connection.unprepared_statement { relation.to_sql }

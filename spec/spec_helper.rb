@@ -1,19 +1,9 @@
 # frozen_string_literal: true
 
-require "yaml"
-require "database_cursor"
-require "active_record"
+require_relative "support/database"
 
-DATABASE_URL = ENV.fetch("DATABASE_URL", "postgresql://postgres@localhost/database_cursor")
-
-# Silence migrations
-ActiveRecord::Migration.verbose = false
-
-# Create the database
-ActiveRecord::Tasks::DatabaseTasks.create(DATABASE_URL)
-
-# Connect to the database
-ActiveRecord::Base.establish_connection(DATABASE_URL)
+Database.create
+Database.connect
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
