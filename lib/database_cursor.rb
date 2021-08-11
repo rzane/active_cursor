@@ -40,7 +40,7 @@ class DatabaseCursor
 
     iterate do |name|
       result = connection.execute("FETCH #{batch_size} FROM #{name}")
-      result.values.each(&block)
+      result.each_row(&block)
       result.ntuples
     end
   end
