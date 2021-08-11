@@ -13,7 +13,6 @@ Database.migrate
 COUNTS = (1..5).map { _1 * 200_000 }
 LABELS = (1..5).to_h { [_1 - 1, _1 * 2] }
 TIME = Hash.new { |h, k| h[k] = [] }
-MEMORY = Hash.new { |h, k| h[k] = [] }
 OBJECTS = Hash.new { |h, k| h[k] = [] }
 
 def seed(count)
@@ -24,17 +23,12 @@ def seed(count)
   SQL
 end
 
-def to_megabytes(bytes)
-  (bytes.to_f / 1_000_000).round(2)
-end
-
 def measure(name, &block)
   memory = MemoryProfiler.report do
     TIME[name] << Benchmark.realtime(&block)
   end
 
   OBJECTS[name] << memory.total_allocated
-  MEMORY[name] << to_megabytes(memory.total_allocated_memsize)
 end
 
 def chart(data:, name:, unit:, filename:)
@@ -91,12 +85,6 @@ chart(
   name: "Time",
   unit: "Seconds",
   filename: "assets/time.png"
-)
-chart(
-  data: MEMORY,
-  name: "Allocated Memory",
-  unit: "Megabytes",
-  filename: "assets/memory.png"
 )
 chart(
   data: OBJECTS,
