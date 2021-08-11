@@ -1,3 +1,5 @@
+require "active_support/core_ext/module/delegation"
+
 module DatabaseCursor
   class Adapter
     # Create a new cursor
@@ -13,7 +15,7 @@ module DatabaseCursor
 
     attr_reader :relation, :batch_size, :name
 
-    delegate :model, :connection, to: :relation
+    delegate :model, :collection, to: :relation
 
     def sql
       connection.unprepared_statement { relation.to_sql }

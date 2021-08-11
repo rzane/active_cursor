@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
+require "yaml"
 require "database_cursor"
+require "active_record"
+require_relative "support/connection"
+
+# Make sure all databases exist
+Connection.prepare
+
+# Define a model to be used in tests
+class Foo < ActiveRecord::Base
+  extend DatabaseCursor::QueryMethods
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
