@@ -8,10 +8,11 @@ Database.create
 Database.connect
 Database.migrate
 
-COUNTS = (1..5).map { _1 * 100_000 }
-LABELS = (1..5).to_h { [_1 - 1, _1] }
+COUNTS = (1..5).map { _1 * 200_000 }
+LABELS = (1..5).to_h { [_1 - 1, _1 * 2] }
 TIME = Hash.new { |h, k| h[k] = [] }
 MEMORY = Hash.new { |h, k| h[k] = [] }
+OBJECTS = Hash.new { |h, k| h[k] = [] }
 
 def seed(count)
   Widget.delete_all
@@ -30,10 +31,11 @@ def measure(name, &block)
     TIME[name] << Benchmark.realtime(&block)
   end
 
+  OBJECTS[name] << memory.total_allocated
   MEMORY[name] << to_megabytes(memory.total_allocated_memsize)
 end
 
-def chart(data, name:, unit:, filename:)
+def chart(data:, name:, unit:, filename:)
   chart = Gruff::Line.new
   chart.labels = LABELS
   chart.title = name
@@ -83,5 +85,21 @@ COUNTS.each do |count|
 end
 
 FileUtils.mkdir_p "assets"
-chart TIME, name: "Time", unit: "Seconds", filename: "assets/time.png"
-chart MEMORY, name: "Allocated Memory", unit: "Megabytes", filename: "assets/memory.png"
+chart(
+  data: TIME,
+  name: "Time",
+  unit: "Seconds",
+  filename: "assets/time.png"
+)
+chart(
+  data: MEMORY,
+  name: "Allocated Memory",
+  unit: "Megabytes",
+  filename: "assets/memory.png"
+)
+chart(
+  data: OBJECTS,
+  name: "Allocated Objects",
+  unit: "Objects",
+  filename: "assets/objects.png"
+)
