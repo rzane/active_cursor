@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DatabaseCursor do
+RSpec.describe ActiveCursor do
   let(:count) { 14 }
   let(:batch_size) { 5 }
   let(:relation) { Foo.all }
@@ -15,7 +15,7 @@ RSpec.describe DatabaseCursor do
   end
 
   it "has a version number" do
-    expect(DatabaseCursor::VERSION).not_to be nil
+    expect(ActiveCursor::VERSION).not_to be nil
   end
 
   describe "#each" do

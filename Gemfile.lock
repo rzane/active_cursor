@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cursor (0.1.0)
+    active_cursor (0.1.0)
       activerecord (~> 6.0)
 
 GEM
@@ -53,7 +53,7 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
-  database_cursor!
+  active_cursor!
   gruff
   memory_profiler
   pg

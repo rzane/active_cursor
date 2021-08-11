@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "database_cursor/version"
+require_relative "active_cursor/version"
 require "active_support/core_ext/module/delegation"
 
-class DatabaseCursor
+class ActiveCursor
   module QueryMethods
     def cursor(...)
-      DatabaseCursor.new(all, ...)
+      ActiveCursor.new(all, ...)
     end
   end
 

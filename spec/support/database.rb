@@ -1,5 +1,5 @@
 require "active_record"
-require "database_cursor"
+require "active_cursor"
 
 ActiveRecord::Migration.verbose = false
 
@@ -10,7 +10,7 @@ module ActiveRecord::Tasks::DatabaseTasks
 end
 
 module Database
-  URL = ENV.fetch("DATABASE_URL", "postgresql://postgres@localhost/database_cursor")
+  URL = ENV.fetch("DATABASE_URL", "postgresql://postgres@localhost/active_cursor")
 
   def self.create
     ActiveRecord::Tasks::DatabaseTasks.create(URL)
@@ -36,7 +36,7 @@ module Database
 end
 
 class Record < ActiveRecord::Base
-  extend DatabaseCursor::QueryMethods
+  extend ActiveCursor::QueryMethods
 
   self.abstract_class = true
 end
