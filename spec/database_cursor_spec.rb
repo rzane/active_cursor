@@ -5,12 +5,12 @@ RSpec.describe DatabaseCursor do
     expect(DatabaseCursor::VERSION).not_to be nil
   end
 
-  context "postgresql" do
+  shared_examples_for "a cursor" do |adapter|
     let(:count) { rand(10..25) }
     let(:batch_size) { rand(1..25) }
 
     before do
-      Connection.use(:postgresql)
+      Connection.use(adapter)
 
       count.times do |value|
         Foo.create!(value: value)
@@ -34,5 +34,13 @@ RSpec.describe DatabaseCursor do
       expected = Array.new(count) { [_1] }
       expect { |y| cursor.each_tuple(&y) }.to yield_successive_args(*expected)
     end
+  end
+
+  context "postgresql" do
+    it_behaves_like "a cursor", :postgresql
+  end
+
+  context "sqlite3" do
+    it_behaves_like "a cursor", :sqlite3
   end
 end

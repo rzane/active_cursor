@@ -38,6 +38,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
+    sqlite3 (1.4.2)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.4.2)
@@ -50,6 +51,7 @@ DEPENDENCIES
   pg
   rake (~> 13.0)
   rspec (~> 3.0)
+  sqlite3
 
 BUNDLED WITH
    2.2.16

@@ -2,12 +2,14 @@
 
 require_relative "database_cursor/version"
 require_relative "database_cursor/postgresql_adapter"
+require_relative "database_cursor/sqlite3_adapter"
 
 module DatabaseCursor
   class Error < StandardError; end
 
   ADAPTERS = {
-    "postgresql" => PostgreSQLAdapter
+    "postgresql" => PostgreSQLAdapter,
+    "sqlite3" => Sqlite3Adapter,
   }
 
   module QueryMethods

@@ -2,10 +2,13 @@ module Connection
   extend self
 
   CONFIG = {
-    postgresql: ENV.fetch("POSTGRESQL_URL", "postgresql://postgres@localhost/database_cursor")
+    postgresql: ENV.fetch("POSTGRESQL_URL", "postgresql://postgres@localhost/database_cursor"),
+    sqlite3: ENV.fetch("SQLITE_URL", "sqlite3::memory:")
   }
 
   def prepare
+    ActiveRecord::Tasks::DatabaseTasks.root = Dir.pwd
+
     CONFIG.each do |_, url|
       ActiveRecord::Tasks::DatabaseTasks.create(url)
     end
