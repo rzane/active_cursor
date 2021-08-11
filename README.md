@@ -1,8 +1,7 @@
 # ActiveCursor
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_cursor`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This gem adds support for cursors to Active Record. This library only supports
+PostgreSQL.
 
 ## Installation
 
@@ -20,9 +19,47 @@ Or install it yourself as:
 
     $ gem install active_cursor
 
+## Why?
+
+Sometimes you need to process a huge amount of data, but loading the entire
+dataset into memory isn't possible.
+
+In those cases, you'll usually reach for Active Record's `find_each` method, which
+will only load records in batches.
+
+Unfortunately, `find_each` requires that each record in the dataset has a unique,
+integer ID. That's not always possible. Enter cursors.
+
 ## Usage
 
-TODO: Write usage instructions here
+Extend your `ApplicationRecord` with `ActiveCursor::QueryMethods`:
+
+```ruby
+class ApplicationRecord < ActiveRecord::Base
+  extend ActiveCursor::QueryMethods
+end
+```
+
+Now, you're ready to start cursing.
+
+```ruby
+User.cursor.each { |user| ... }
+User.cursor.each_row { |attributes| ... }
+User.select(:id, :name).cursor.each_tuple { |id, name| ... }
+```
+
+By default, this will load 1,000 records at a time from the database. You can
+change that by specifying the batch size:
+
+```ruby
+User.cursor(batch_size: 10).each { |user| ... }
+```
+
+All methods return enumerables when no block is given, so you can use the full power of Ruby's Enumerable:
+
+```ruby
+User.cursor.each.find { |user| user.name == "Rick" }
+```
 
 ## Development
 
@@ -32,4 +69,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_cursor.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rzane/active_cursor.
