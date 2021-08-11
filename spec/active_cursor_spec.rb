@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ActiveCursor do
-  let(:count) { 14 }
+  let(:count) { rand(11..14) }
   let(:batch_size) { 5 }
   let(:relation) { Foo.all }
   let(:cursor) { relation.cursor(batch_size: batch_size) }
