@@ -1,8 +1,10 @@
+#!/usr/bin/env ruby
+
 require "bundler/setup"
 require "gruff"
 require "benchmark"
 require "memory_profiler"
-require_relative "spec/support/database"
+require_relative "../spec/support/database"
 
 Database.create
 Database.connect
@@ -36,9 +38,9 @@ def measure(name, &block)
 end
 
 def chart(data:, name:, unit:, filename:)
-  chart = Gruff::Line.new
-  chart.labels = LABELS
+  chart = Gruff::Bar.new
   chart.title = name
+  chart.labels = LABELS
   chart.y_axis_label = unit
   chart.x_axis_label = "Records (x100,000)"
 
@@ -84,9 +86,8 @@ COUNTS.each do |count|
   end
 end
 
-FileUtils.mkdir_p "assets"
 chart(
-  data: TIME,
+  data: SECONDS,
   name: "Time",
   unit: "Seconds",
   filename: "assets/time.png"

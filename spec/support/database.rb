@@ -1,6 +1,14 @@
 require "active_record"
 require "database_cursor"
 
+ActiveRecord::Migration.verbose = false
+
+module ActiveRecord::Tasks::DatabaseTasks
+  def self.verbose?
+    false
+  end
+end
+
 module Database
   URL = ENV.fetch("DATABASE_URL", "postgresql://postgres@localhost/database_cursor")
 
@@ -13,8 +21,6 @@ module Database
   end
 
   def self.migrate
-    ActiveRecord::Migration.verbose = false
-
     ActiveRecord::Schema.define do
       create_table :foos, force: true do |t|
         t.integer :value, null: false
