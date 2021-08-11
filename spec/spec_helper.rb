@@ -3,15 +3,17 @@
 require "yaml"
 require "database_cursor"
 require "active_record"
-require_relative "support/connection"
 
-# Make sure all databases exist
-Connection.prepare
+DATABASE_URL = ENV.fetch("DATABASE_URL", "postgresql://postgres@localhost/database_cursor")
 
-# Define a model to be used in tests
-class Foo < ActiveRecord::Base
-  extend DatabaseCursor::QueryMethods
-end
+# Silence migrations
+ActiveRecord::Migration.verbose = false
+
+# Create the database
+ActiveRecord::Tasks::DatabaseTasks.create(DATABASE_URL)
+
+# Connect to the database
+ActiveRecord::Base.establish_connection(DATABASE_URL)
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
